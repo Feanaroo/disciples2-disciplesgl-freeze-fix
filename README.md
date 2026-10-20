@@ -1,8 +1,18 @@
-# Disciples II: fix for the neutral-turn freeze on high-refresh monitors
+# Disciples 2 freezes on the neutral turn: fix for DisciplesGL on 120/144/165/240 Hz monitors
 
-If Disciples II freezes while neutral units move (sometimes with an empty
-"Microsoft Visual C++ Runtime Library" box), and you play with the **DisciplesGL** OpenGL wrapper
-on a high-refresh monitor (seen at 240 Hz), this fixes it.
+Fix for **Disciples II: Rise of the Elves** (GOG / Steam, v3.01) freezing or hanging during the
+AI / neutral turn when the game uses the **DisciplesGL** OpenGL wrapper (`C4dll-R.dll`) on a
+high-refresh-rate monitor.
+
+## Symptoms
+
+- The game freezes ("Disciples II v3.01 is not responding") when it's the neutral player's turn
+  and neutral stacks have units to move. Other turns work.
+- Sometimes an empty **"Microsoft Visual C++ Runtime Library"** error box appears.
+- The game uses a lot of memory (close to 2 GB) right before it freezes.
+- It happens every time with the same save, and only on a 120 Hz+ monitor
+  (confirmed at 240 Hz; the same code also fails at 120, 144, 165 and 360 Hz with some speed
+  settings). It doesn't happen at 60 Hz.
 
 ## Cause
 
@@ -19,7 +29,9 @@ The game then halves the step up to twice. At 240 Hz with default speed settings
 process runs out of memory (~2 GB). The out-of-memory error then deadlocks the error dialog
 against the audio thread, so the game freezes instead of crashing.
 
-At 60 Hz the same formula gives a step of 3, which is why most people never see it.
+At 60 Hz the same formula gives a step of 3, which is why most people never see it. Testing the
+real hook code shows a step of 0 with some speed settings at 120, 144, 165, 240 and 360 Hz, but
+never at 60 or 75 Hz.
 
 ## Fix
 
